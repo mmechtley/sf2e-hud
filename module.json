@@ -1,6 +1,6 @@
 {
-    "id": "pf2e-hud",
-    "title": "PF2e HUD",
+    "id": "sf2e-hud",
+    "title": "SF2e HUD",
     "description": "",
     "authors": [
         {
@@ -47,7 +47,7 @@
                 "manifest": "https://raw.githubusercontent.com/ruipin/fvtt-lib-wrapper/master/module.json"
             },
             {
-                "id": "starfinder-field-test",
+                "id": "starfinder-field-test-for-pf2e",
                 "type": "module",
                 "manifest": "https://raw.githubusercontent.com/TikaelSol/starfinder-field-test/main/module.json"
             }

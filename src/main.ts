@@ -19,7 +19,7 @@ import { rollRecallKnowledge } from "./actions/recall-knowledge";
 import { useResolve } from "./actions/resolve";
 import { editAvatar } from "./utils/avatar";
 
-MODULE.register("pf2e-hud", "PF2e HUD");
+MODULE.register("sf2e-hud", "SF2e HUD");
 
 const HUDS = {
     tooltip: new PF2eHudTooltip(),

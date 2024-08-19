@@ -205,7 +205,8 @@ const SKILLS: RawSkill[] = [
         actions: [
             {
                 actionId: "access-infosphere",
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.Yn4jLPVWVE1vtAaF"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.Yn4jLPVWVE1vtAaF",
+                label: "SF2E.Actions.AccessInfosphere.Title"
             },
             "decipher-writing",
             {
@@ -213,16 +214,19 @@ const SKILLS: RawSkill[] = [
                 cost: 2,
                 trained: true,
                 uuid: "Compendium.pf2e.actionspf2e.Item.cYdz2grcOcRt4jk6",
+                label: "SF2E.Actions.PlotCourse.Title"
             },
             {
                 actionId: "hack",
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.RF8xNJ8QsMwogerB"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.RF8xNJ8QsMwogerB",
+                label: "SF2E.Actions.Hack.Title"
             },
             {
                 actionId: "program",
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.9zvazWNY5tKbMFnC"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.9zvazWNY5tKbMFnC",
+                label: "SF2E.Actions.Program.Title"
             },
             "recall-knowledge"
         ]
@@ -373,42 +377,49 @@ const SKILLS: RawSkill[] = [
                 actionId: "drive",
                 cost: 1,
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.OxF2dvUCdTYHrnIm"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.OxF2dvUCdTYHrnIm",
+                label: "SF2E.Actions.Drive.Title"
             },
             {
                 actionId: "navigate",
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.hsUKPqTdAvWwsqH2"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.hsUKPqTdAvWwsqH2",
+                label: "SF2E.Actions.Navigate.Title"
             },
             {
                 actionId: "plot-course",
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.LXqcXRayK58inaKo"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.LXqcXRayK58inaKo",
+                label: "SF2E.Actions.PlotCourse.Title"
             },
             "recall-knowledge",
             {
                 actionId: "run-over",
                 cost: 1,
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.FisNbAu9pdMnz6vF"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.FisNbAu9pdMnz6vF",
+                label: "SF2E.Actions.RunOver.Title"
             },
             {
                 actionId: "stop",
                 cost: 1,
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.3oL5ap2Qb00Saaz9"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.3oL5ap2Qb00Saaz9",
+                label: "SF2E.Actions.Stop.Title"
             },
             {
                 actionId: "stunt",
                 cost: 1,
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.ailFBRjKuGCOAsCR"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.ailFBRjKuGCOAsCR",
+                label: "SF2E.Actions.Stunt.Title"
             },
             {
                 actionId: "take-control",
                 cost: 1,
                 trained: true,
-                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.9Msf0P33UR5mNRuz"
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.9Msf0P33UR5mNRuz",
+                label: "SF2E.Actions.TakeControl.Title"
             },
         ]
     },
@@ -576,8 +587,18 @@ const actionLabels: Record<string, string> = {};
 function finalizeSkills(actor: ActorPF2e): FinalizedSkill[] {
     skillsCache ??= SKILLS.map((raw) => {
         const actions = raw.actions.map((rawAction) => prepareStatisticAction(raw.slug, rawAction));
+        let locKey : string = "";
+        if(raw.slug === "perception")
+            locKey = "PF2E.PerceptionLabel";
+        else if(raw.slug === "computers")
+            locKey = "SF2E.Skill.Computers";
+        else if(raw.slug === "piloting")
+            locKey = "SF2E.Skill.Piloting";
+        else
+            locKey = CONFIG.PF2E.skills[raw.slug].label;
+
         const label = game.i18n.localize(
-            raw.slug === "perception" ? "PF2E.PerceptionLabel" : CONFIG.PF2E.skills[raw.slug].label
+            locKey
         );
 
         const filterValues = actions.map((action) => action.filterValue);

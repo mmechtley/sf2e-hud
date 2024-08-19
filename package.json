@@ -1,17 +1,17 @@
 {
-    "name": "pf2e-hud",
+    "name": "sf2e-hud",
     "scripts": {
         "build": "esbuild src/main.ts --bundle --keep-names --minify --sourcemap --outdir=scripts",
         "dev": "esbuild src/main.ts --bundle --keep-names --watch --sourcemap --outdir=scripts"
     },
     "author": "Idle",
-    "homepage": "https://github.com/reonZpf2e-hud#readme",
+    "homepage": "https://github.com/reonZ/pf2e-hud#readme",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/reonZpf2e-hud.git"
+        "url": "git+https://github.com/mmechtley/sf2e-hud.git"
     },
     "bugs": {
-        "url": "https://github.com/reonZpf2e-hud/issues"
+        "url": "https://github.com/reonZ/pf2e-hud/issues"
     },
     "devDependencies": {
         "@types/sortablejs": "^1.15.8",
@@ -19,7 +19,7 @@
         "typescript": "5.3.3"
     },
     "dependencies": {
-        "foundry-pf2e": "github:reonZ/foundry-pf2e",
+        "foundry-pf2e": "reonZ/foundry-pf2e#fc9eab63beb53366aeb4b509b6e876a570125c68",
         "sortablejs": "^1.15.2"
     }
 }
