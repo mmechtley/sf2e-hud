@@ -2,10 +2,12 @@ import { DegreeOfSuccess, R, render, signedInteger, templateLocalize } from "fou
 
 const SKILLS = [
     "arcana",
+    "computers",
     "crafting",
     "medicine",
     "nature",
     "occultism",
+    "piloting",
     "religion",
     "society",
 ] as const;

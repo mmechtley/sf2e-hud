@@ -201,6 +201,33 @@ const SKILLS: RawSkill[] = [
         ],
     },
     {
+        slug: "computers",
+        actions: [
+            {
+                actionId: "access-infosphere",
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.Yn4jLPVWVE1vtAaF"
+            },
+            "decipher-writing",
+            {
+                actionId: "disable-device",
+                cost: 2,
+                trained: true,
+                uuid: "Compendium.pf2e.actionspf2e.Item.cYdz2grcOcRt4jk6",
+            },
+            {
+                actionId: "hack",
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.RF8xNJ8QsMwogerB"
+            },
+            {
+                actionId: "program",
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.9zvazWNY5tKbMFnC"
+            },
+            "recall-knowledge"
+        ]
+    },
+    {
         slug: "deception",
         actions: [
             {
@@ -338,6 +365,52 @@ const SKILLS: RawSkill[] = [
             },
             "earnIncome",
         ],
+    },
+    {
+        slug: "piloting",
+        actions: [
+            {
+                actionId: "drive",
+                cost: 1,
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.OxF2dvUCdTYHrnIm"
+            },
+            {
+                actionId: "navigate",
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.hsUKPqTdAvWwsqH2"
+            },
+            {
+                actionId: "plot-course",
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.LXqcXRayK58inaKo"
+            },
+            "recall-knowledge",
+            {
+                actionId: "run-over",
+                cost: 1,
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.FisNbAu9pdMnz6vF"
+            },
+            {
+                actionId: "stop",
+                cost: 1,
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.3oL5ap2Qb00Saaz9"
+            },
+            {
+                actionId: "stunt",
+                cost: 1,
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.ailFBRjKuGCOAsCR"
+            },
+            {
+                actionId: "take-control",
+                cost: 1,
+                trained: true,
+                uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.9Msf0P33UR5mNRuz"
+            },
+        ]
     },
     {
         slug: "religion",
@@ -924,7 +997,7 @@ type RawSkillAction = {
 };
 
 type RawSkill = {
-    slug: SkillSlug | "perception";
+    slug: SkillSlug | "perception" | "piloting" | "computers";
     actions: (SharedAction | RawSkillAction)[];
 };
 

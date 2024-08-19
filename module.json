@@ -4,6 +4,9 @@
     "description": "",
     "authors": [
         {
+            "name": "Mira"
+        },
+        {
             "name": "Idle",
             "discord": "idleatre"
         }
@@ -17,12 +20,12 @@
         "maximum": "12"
     },
     "version": "1.7.1",
-    "url": "https://github.com/reonZ/pf2e-hud",
-    "readme": "https://github.com/reonZ/pf2e-hud/blob/master/README.md",
-    "manifest": "https://raw.githubusercontent.com/reonZ/pf2e-hud/master/module.json",
-    "download": "https://github.com/reonZ/pf2e-hud/releases/download/1.7.1/module.zip",
-    "changelog": "https://github.com/reonZ/pf2e-hud/blob/master/CHANGELOG.md",
-    "bugs": "https://github.com/reonZ/pf2e-hud/issues",
+    "url": "https://github.com/mmechtley/sf2e-hud",
+    "readme": "https://github.com/mmechtley/sf2e-hud/blob/master/README.md",
+    "manifest": "https://raw.githubusercontent.com/mmechtley/sf2e-hud/master/module.json",
+    "download": "https://github.com/mmechtley/sf2e-hud/releases/download/1.7.1/module.zip",
+    "changelog": "https://github.com/mmechtley/sf2e-hud/blob/master/CHANGELOG.md",
+    "bugs": "https://github.com/mmechtley/sf2e-hud/issues",
     "styles": [
         "styles/pf2e-hud.css"
     ],
@@ -42,6 +45,11 @@
                 "id": "lib-wrapper",
                 "type": "module",
                 "manifest": "https://raw.githubusercontent.com/ruipin/fvtt-lib-wrapper/master/module.json"
+            },
+            {
+                "id": "starfinder-field-test",
+                "type": "module",
+                "manifest": "https://raw.githubusercontent.com/TikaelSol/starfinder-field-test/main/module.json"
             }
         ]
     },
