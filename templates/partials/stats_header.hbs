@@ -1,7 +1,7 @@
 {{!-- stamina --}}
 {{#if health.useStamina}}
 <div data-section="resolve">
-    <a data-action="use-resolve" data-tooltip="pf2e-hud.hud.resolve.title">
+    <a data-action="use-resolve" data-tooltip="sf2e-hud.hud.resolve.title">
         <i class="fa-solid fa-circle-r"></i>
     </a>
     <input class="small" type="number" name="system.resources.resolve" value="{{resolve.value}}"
@@ -28,7 +28,7 @@
 </a>
 {{!-- temp hp --}}
 {{else}}
-<div data-section="temp-hp" data-tooltip="pf2e-hud.hud.tempHP">
+<div data-section="temp-hp" data-tooltip="sf2e-hud.hud.tempHP">
     <span><i class="fa-solid fa-heart-half-stroke"></i></span>
     <input class="small" type="number" name="system.attributes.hp.temp" value="{{health.temp}}"
         min="0">

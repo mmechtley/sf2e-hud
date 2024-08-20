@@ -77,7 +77,7 @@ Hooks.once("setup", () => {
     });
 
     registerSetting({
-        key: "hideUntrained",
+        key: "hideUntrainedActions",
         type: Boolean,
         default: false,
         scope: "client",
@@ -86,6 +86,17 @@ Hooks.once("setup", () => {
             HUDS.persistent.sidebar?.render();
         },
     });
+
+    registerSetting({
+        key: "hideUntrainedSkills",
+        type: Boolean,
+        default: false,
+        scope: "client",
+        onChange: () => {
+            HUDS.token.sidebar?.render();
+            HUDS.persistent.sidebar?.render();
+        }
+    })
 
     registerKeybind("setActor", {
         onUp: () => HUDS.persistent.setSelectedToken(),

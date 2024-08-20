@@ -35,7 +35,7 @@ import { SidebarMenu, SidebarName, getSidebars } from "./sidebar/base";
 const CLOSE_OPTIONS = ["never", "sidebar", "all"] as const;
 const CLOSE_CHOICES = R.mapToObj(CLOSE_OPTIONS, (option) => [
     option,
-    `pf2e-hud.token.closeChoices.${option}`,
+    `sf2e-hud.token.closeChoices.${option}`,
 ]);
 
 class PF2eHudToken extends makeAdvancedHUD(PF2eHudBaseToken<TokenSettings, TokenHudActor>) {

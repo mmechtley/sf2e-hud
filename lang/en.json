@@ -29,9 +29,13 @@
                 "name": "Popup on Cursor",
                 "hint": "The module popup will be centered on the position of the cursor when it is first rendered (instead of showing up in the center of the viewport)."
             },
-            "hideUntrained": {
+            "hideUntrainedActions": {
                 "name": "Hide Untrained",
                 "hint": "Should skill actions be hidden from the sidebar if the character isn't proficient with them."
+            },
+            "hideUntrainedSkills": {
+                "name": "Hide Untrained Skills",
+                "hint": "Should the entire skill block be hidden from the sidebar if the character isn't proficient"
             },
             "closePopupOnSendToChat": {
                 "name": "Close Popup on Send-to-Chat",

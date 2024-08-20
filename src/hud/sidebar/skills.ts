@@ -104,7 +104,7 @@ const SKILLS: RawSkill[] = [
             {
                 actionId: "borrow-arcane-spell",
                 trained: true,
-                label: "pf2e-hud.actions.borrowArcaneSpell",
+                label: "sf2e-hud.actions.borrowArcaneSpell",
                 uuid: "Compendium.pf2e.actionspf2e.Item.OizxuPb44g3eHPFh",
             },
             "decipher-writing",
@@ -582,10 +582,15 @@ function prepareStatisticAction(
     } satisfies PreparedSkillAction;
 }
 
-let skillsCache: PreparedSkill[] | null = null;
 const actionLabels: Record<string, string> = {};
 function finalizeSkills(actor: ActorPF2e): FinalizedSkill[] {
-    skillsCache ??= SKILLS.map((raw) => {
+    const isCharacter = actor.isOfType("character");
+    const hideUntrained =
+        getSetting("hideUntrainedActions") && !hasItemWithSourceId(actor, UNTRAINED_IMPROVISATION, "feat");
+    const hideUntrainedSkills =
+        getSetting( "hideUntrainedSkills") && !hasItemWithSourceId(actor, UNTRAINED_IMPROVISATION, "feat");
+
+    const skills = SKILLS.map((raw) => {
         const actions = raw.actions.map((rawAction) => prepareStatisticAction(raw.slug, rawAction));
         let locKey : string = "";
         if(raw.slug === "perception")
@@ -610,13 +615,13 @@ function finalizeSkills(actor: ActorPF2e): FinalizedSkill[] {
             label,
             filterValue: filterValues.join("|"),
         } satisfies PreparedSkill;
+    }).filter((skill) =>{
+        const { proficient, modifiers } = actor.getStatistic(skill.slug)!;
+        const followingTheExpert = modifiers.find(m => m.slug === "follow-the-expert-proficiency") != null;
+        return( !isCharacter || proficient || followingTheExpert || !hideUntrainedSkills );
     });
 
-    const isCharacter = actor.isOfType("character");
-    const hideUntrained =
-        getSetting("hideUntrained") && !hasItemWithSourceId(actor, UNTRAINED_IMPROVISATION, "feat");
-
-    return skillsCache.map((skill) => {
+    return skills.map((skill) => {
         const { mod, rank, proficient } = actor.getStatistic(skill.slug)!;
         const rankLabel = game.i18n.localize(`PF2E.ProficiencyLevel${rank ?? 0}`);
 

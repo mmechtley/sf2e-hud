@@ -248,7 +248,11 @@
 {{!-- end strike ready --}}
 {{/if}}
 {{#if attack.strike.ammunition}}
-<div class="quantity boxed">{{attack.strike.item.ammo.quantity}}</div>
+    {{#if (gt strike.item.ammo.uses.max 1)}}
+        <div class="quantity boxed">{{strike.item.ammo.uses.value}} ({{attack.strike.item.ammo.quantity}})</div>
+    {{else}}
+        <div class="quantity boxed">{{attack.strike.item.ammo.quantity}}</div>
+    {{/if}}
 {{/if}}
 {{!-- end strike/blast --}}
 {{/if}}
