@@ -18,6 +18,7 @@ import { PF2eHudTracker } from "./hud/tracker";
 import { rollRecallKnowledge } from "./actions/recall-knowledge";
 import { useResolve } from "./actions/resolve";
 import { editAvatar } from "./utils/avatar";
+import { getNpcStrikeImage } from "./utils/npc-attacks";
 
 MODULE.register("sf2e-hud", "SF2e HUD");
 
@@ -145,27 +146,27 @@ Hooks.once("setup", () => {
         registerSetting(setting);
     }
 
+    const actions = {
+        rollRecallKnowledge,
+        useResolve,
+    };
+
+    const utils = {
+        editAvatar,
+        getNpcStrikeImage,
+    };
+
     MODULE.current.api = {
         hud: HUDS,
-        actions: {
-            rollRecallKnowledge,
-            useResolve,
-        },
-        utils: {
-            editAvatar,
-        },
+        actions,
+        utils,
     };
 
     // @ts-ignore
     game.hud = {
         ...HUDS,
-        actions: {
-            rollRecallKnowledge,
-            useResolve,
-        },
-        utils: {
-            editAvatar,
-        },
+        actions,
+        utils,
     };
 
     for (const hud of huds) {
