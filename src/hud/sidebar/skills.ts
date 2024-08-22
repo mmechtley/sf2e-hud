@@ -618,7 +618,7 @@ function finalizeSkills(actor: ActorPF2e): FinalizedSkill[] {
     }).filter((skill) =>{
         const { proficient, modifiers } = actor.getStatistic(skill.slug)!;
         const followingTheExpert = modifiers.find(m => m.slug === "follow-the-expert-proficiency") != null;
-        return( !isCharacter || proficient || followingTheExpert || !hideUntrainedSkills );
+        return( proficient || followingTheExpert || !hideUntrainedSkills );
     });
 
     return skills.map((skill) => {
