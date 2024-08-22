@@ -385,7 +385,11 @@ class PF2eHudResources extends PF2eHudBase<ResourcesSettings, ResourcesUserSetti
 
                 html.querySelector(".window-header .window-title")?.append(btn);
             },
-        });
+        },
+            {
+                id: "resource-await-dialog"
+            }
+        );
 
         return editedResource ? this.validateResource(editedResource) : null;
     }

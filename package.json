@@ -19,7 +19,7 @@
         "typescript": "5.3.3"
     },
     "dependencies": {
-        "foundry-pf2e": "reonZ/foundry-pf2e#fc9eab63beb53366aeb4b509b6e876a570125c68",
+        "foundry-pf2e": "reonZ/foundry-pf2e#264b40ead6a9e1d1d359d480663091d58a762f99",
         "sortablejs": "^1.15.2"
     }
 }
