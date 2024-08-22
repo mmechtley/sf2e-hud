@@ -19,7 +19,7 @@
         "verified": "12.330",
         "maximum": "12"
     },
-    "version": "1.7.1",
+    "version": "1.8.0",
     "url": "https://github.com/mmechtley/sf2e-hud",
     "readme": "https://github.com/mmechtley/sf2e-hud/blob/master/README.md",
     "manifest": "https://raw.githubusercontent.com/mmechtley/sf2e-hud/master/module.json",
