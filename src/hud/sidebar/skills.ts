@@ -369,10 +369,14 @@ const SKILLS: RawSkill[] = [
         actions: [
             {
                 actionId: "drive",
-                cost: 1,
                 trained: true,
                 uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.OxF2dvUCdTYHrnIm",
-                label: "SF2E.Actions.Drive.Title"
+                label: "SF2E.Actions.Drive.Title",
+                variants:[
+                    "drive1",
+                    "drive2",
+                    "drive3"
+                ]
             },
             {
                 actionId: "navigate",
@@ -406,7 +410,16 @@ const SKILLS: RawSkill[] = [
                 cost: 1,
                 trained: true,
                 uuid: "Compendium.starfinder-field-test-for-pf2e.actions.Item.ailFBRjKuGCOAsCR",
-                label: "SF2E.Actions.Stunt.Title"
+                label: "SF2E.Actions.Stunt.Title",
+                variants: [
+                    "back-off",
+                    "evade",
+                    "flip-and-burn",
+                    "barrel-roll",
+                    "flyby",
+                    "drift",
+                    "turn-in-place"
+                ]
             },
             {
                 actionId: "take-control",
