@@ -1,6 +1,5 @@
 import {
     R,
-    canObserveActor,
     createGlobalEvent,
     createHook,
     createTimeout,
@@ -24,6 +23,7 @@ import {
     getSpeeds,
     getStatistics,
     getStatsHeader,
+    userCanObserveActor,
 } from "./shared/base";
 
 const POSITIONS = {
@@ -67,7 +67,7 @@ const SETTING_TYPE = ["never", "owned", "observed"] as const;
 const SETTING_DISTANCE = ["never", "idiot", "smart", "weird"] as const;
 const SETTING_NO_DEAD = ["none", "small", "full"] as const;
 
-class PF2eHudTooltip extends PF2eHudBaseToken<TooltipSettings> {
+class PF2eHudTooltip extends PF2eHudBaseToken<TooltipSettings, ActorPF2e, TooltipRenderOptions> {
     #hoverTokenHook = createHook("hoverToken", this.#onHoverToken.bind(this));
     #canvasTearDownHook = createHook("canvasTearDown", this.#onCanvasTearDown.bind(this));
 
@@ -101,7 +101,6 @@ class PF2eHudTooltip extends PF2eHudBaseToken<TooltipSettings> {
 
     get SETTINGS_ORDER(): (keyof TooltipSettings)[] {
         return [
-            "partyAsObserved",
             "status",
             "enabled",
             "type",
@@ -116,11 +115,6 @@ class PF2eHudTooltip extends PF2eHudBaseToken<TooltipSettings> {
 
     getSettings() {
         return super.getSettings().concat([
-            {
-                key: "partyAsObserved",
-                type: Boolean,
-                default: false,
-            },
             {
                 key: "status",
                 type: String,
@@ -254,6 +248,10 @@ class PF2eHudTooltip extends PF2eHudBaseToken<TooltipSettings> {
         const enableDraw = enabled && this.getSetting("drawDistance") > 0;
         this.#tokenRefreshWrapper.toggle(enableDraw);
         this.#canvasTearDownHook.toggle(enableDraw);
+
+        if (!enabled && this.rendered) {
+            this.close();
+        }
     }
 
     _tokenCleanup() {
@@ -349,9 +347,7 @@ class PF2eHudTooltip extends PF2eHudBaseToken<TooltipSettings> {
 
         const setting = this.getSetting("type");
         const isOwner = actor.isOwner;
-        const isObserver =
-            canObserveActor(actor) ||
-            (this.getSetting("partyAsObserved") && actor?.system.details.alliance === "party");
+        const isObserver = userCanObserveActor(actor);
 
         const extended = (setting === "owned" && isOwner) || (setting === "observed" && isObserver);
         if (!extended) {
@@ -399,7 +395,7 @@ class PF2eHudTooltip extends PF2eHudBaseToken<TooltipSettings> {
         content.innerHTML = result;
     }
 
-    _onRender(context: ApplicationRenderContext, options: ApplicationRenderOptions) {
+    _onRender(context: ApplicationRenderContext, options: TooltipRenderOptions) {
         this.cancelClose();
         this.drawDistance();
     }
@@ -495,8 +491,8 @@ class PF2eHudTooltip extends PF2eHudBaseToken<TooltipSettings> {
     }
 
     async render(
-        options?: boolean | Partial<BaseTokenRenderOptions>,
-        _options?: Partial<BaseTokenRenderOptions>
+        options?: boolean | Partial<TooltipRenderOptions>,
+        _options?: Partial<TooltipRenderOptions>
     ) {
         if (!this.actor || this.token === hud.token.token) return this;
         return super.render(options, _options);
@@ -661,7 +657,6 @@ type TooltipSettings = BaseTokenSettings & {
     delay: number;
     status: string;
     drawDistance: number;
-    partyAsObserved: boolean;
     type: (typeof SETTING_TYPE)[number];
     noDead: (typeof SETTING_NO_DEAD)[number];
     position: (typeof SETTING_POSITION)[number];

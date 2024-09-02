@@ -7,10 +7,11 @@ import {
     canUseStances,
     createSelfEffectMessage,
     elementDataset,
+    eventToRollMode,
     getActionGlyph,
+    getActionIcon,
     getActionImg,
     getActiveModule,
-    getSourceId,
     getStances,
     htmlClosest,
     htmlQuery,
@@ -20,7 +21,6 @@ import {
     toggleStance,
     tupleHasValue,
 } from "foundry-pf2e";
-import { eventToRollMode, getActionIcon } from "foundry-pf2e/src/pf2e";
 import { getNpcStrikeImage } from "../../utils/npc-attacks";
 import { PF2eHudTextPopup } from "../popup/text";
 import { getItemFromElement } from "../shared/base";
@@ -101,7 +101,7 @@ class PF2eHudSidebarActions extends PF2eHudSidebar {
             const useLabel = game.i18n.localize("PF2E.Action.Use");
 
             for (const ability of actorItems(actor, abilityTypes)) {
-                const sourceId = getSourceId(ability);
+                const sourceId = ability.sourceId;
                 const traits = ability.system.traits.value;
                 const isExploration = isCharacter && traits.includes("exploration");
 

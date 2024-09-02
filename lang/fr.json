@@ -17,6 +17,10 @@
             }
         },
         "settings": {
+            "partyAsObserved": {
+                "name": "Groupe observé",
+                "hint": "Considérer les acteurs du groupe comme 'observés' quand il s'agit de déterminer si l'information est étendue ou pas. À ne pas confondre avec l'acteur de groupe."
+            },
             "highestSpeed": {
                 "name": "Montrer la plus grande vitesse",
                 "hint": "Si aucune vitesse n'a été manuellement sélectionnée, la plus élevée sera toujours montrée par défaut même si la vitesse de déplacement au sol n'est pas 0."
@@ -115,10 +119,6 @@
                         "small": "Version réduite",
                         "full": "Version étendue"
                     }
-                },
-                "partyAsObserved": {
-                    "name": "Groupe observé",
-                    "hint": "Considérer les acteurs du groupe comme 'observés' quand il s'agit de déterminer si l'information est étendue ou pas. À ne pas confondre avec l'acteur de groupe."
                 }
             },
             "token": {
@@ -313,7 +313,7 @@
                         "message": "Êtes-vous sûr(e) de vouloir automatiquement remplir tous les raccourcis pour <strong>{name}</strong> ?"
                     },
                     "owner": {
-                        "title": "Copier les raccourcis su propriétaire",
+                        "title": "Copier les raccourcis du propriétaire",
                         "message": "Êtes-vous sûr(e) de vouloir copier les raccourcis du propriétaire de <strong>{name}</strong> ?",
                         "none": "Ce personnage n'a pas de propriétaire disposant d'un jeu de raccourcis."
                     }

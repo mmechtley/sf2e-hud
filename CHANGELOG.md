@@ -1,3 +1,52 @@
+# 1.11.1
+
+-   fix `Earn Income` shortcut not working
+
+# 1.11.0
+
+-   this is a system `6.3.1` release
+-   fix `Earn Income` skill action not working and move it to the `Extras` sidebar instead
+-   fix `Popup` application not having a vertical scrollbar when reaching the viewport's height
+-   fix `Take Cover` action not removing the effect if it is currently present on the actor
+
+# 1.10.1
+
+-   `Combat Tracker`:
+    -   fix showing of party members stats not respecting the system's metagame setting `Show Party-Member Stats`
+
+# 1.10.0
+
+-   this is a system `6.3.0` release
+-   `Combat Tracker`:
+    -   token image no longer overflows out of the tracker's bounds when `Texture Scaling` is enabled
+        -   this was causing some issues when the tracker was reaching a height big enough to require scrolling
+        -   downscaled token images now have gradient masks instead (stolen from [supe](https://github.com/CarlosFdez))
+    -   fix non-breaking error when changing settings while the feature was disabled
+-   `Persistent HUD`:
+    -   fix portrait image not using the custom avatar until an actor update took place
+-   `Token HUD`:
+    -   fix hud not closing when disabling the feature and still on screen
+    -   fix hud not showing for PCs/NPCs if the `Auto-Set Actor` was set to `On Token Selection` even when the `Persistent HUD` was disabled
+-   fix debug stuff showing in console
+-   fix `Party Alliance as Observed` description only mentioning the tooltip
+
+# 1.9.0
+
+-   the `Token HUD` no longer gets disabled when the `Auto-Set Actor` setting is set to `On Token Selection`
+    -   the HUD will now show up whenever an actor isn't moved to the persistent HUD
+        -   if the actor isn't a PC or NPC
+        -   if the persistent HUD currently has a "locked" actor
+    -   because of that new approach, few settings don't require a "reload" anymore
+-   move `Party as Observed` (now `Party Alliance as Observed`) to be a global setting
+    -   it is used by both the `Token Tooltip` and `Combat Tracker` HUDs
+    -   the actor being part of a `Party` actor you can observe is now also taken into account
+    -   the setting has been reset because of that change
+-   add `Avoid Notice` as a skill action in the `Skills` sidebar under `Stealth`
+-   `Persistent HUD`:
+    -   stances shortcut now fade-out when out of combat
+    -   the HUD is refreshed when the actor's combatant is added/removed from the active encounter
+-   fix the initiative roll missing roll options in the `Extras` sidebar
+
 # 1.8.0
 
 -   add support for the `Identify` feature of `PF2e Toolbelt`

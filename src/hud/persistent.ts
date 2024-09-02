@@ -1,9 +1,11 @@
 import {
     MODULE,
+    PersistentDamageDialog,
     R,
     addListener,
     addListenerAll,
     arrayIncludes,
+    canUseStances,
     changeCarryType,
     confirmDialog,
     consumeItem,
@@ -26,7 +28,6 @@ import {
     isValidStance,
     localize,
     objectHasKey,
-    openAttackpopup,
     resolveMacroActor,
     setFlag,
     templateLocalize,
@@ -34,7 +35,6 @@ import {
     unsetFlag,
     warn,
 } from "foundry-pf2e";
-import { PersistentDialog } from "foundry-pf2e/src/pf2e";
 import { rollRecallKnowledge } from "../actions/recall-knowledge";
 import { hud } from "../main";
 import { AvatarData, editAvatar } from "../utils/avatar";
@@ -88,7 +88,12 @@ const PARTS = ["menu", "portrait", "main", "effects"] as const;
 const ROMAN_RANKS = ["", "Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ", "Ⅵ", "Ⅶ", "Ⅷ", "Ⅸ", "Ⅹ"] as const;
 
 class PF2eHudPersistent extends makeAdvancedHUD(
-    PF2eHudBaseActor<PersistentSettings, PersistentHudActor, PersistentUserSetting>
+    PF2eHudBaseActor<
+        PersistentSettings,
+        PersistentHudActor,
+        PersistentUserSetting,
+        PersistentRenderOptions
+    >
 ) {
     #onControlTokenDebounce = foundry.utils.debounce(this.#onControlToken.bind(this), 1);
 
@@ -99,9 +104,12 @@ class PF2eHudPersistent extends makeAdvancedHUD(
     #deleteTokenHook = createHook("deleteToken", this.#onDeleteToken.bind(this));
     #deleteActorHook = createHook("deleteActor", this.#onDeleteActor.bind(this));
     #updateUserHook = createHook("updateUser", this.#onUpdateUser.bind(this));
-    #combatDeleteHook = createHook("deleteCombat", this.#onDeleteCombat.bind(this));
+    #deleteCombatHook = createHook("deleteCombat", this.#onDeleteCombat.bind(this));
+    #deleteCombatantHook = createHook("deleteCombatant", this.#onChangeCombatant.bind(this));
+    #createCombatantHook = createHook("createCombatant", this.#onChangeCombatant.bind(this));
     #combatTurnHook = createHook("combatTurnChange", this.#onCombatTurnChange.bind(this));
 
+    #hasStances: boolean = false;
     #isVirtual: boolean = false;
     #isUserCharacter: boolean = false;
     #actor: PersistentHudActor | null = null;
@@ -185,7 +193,9 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                 choices: ["disabled", "select", "combat"],
                 default: "disabled",
                 scope: "client",
-                requiresReload: true,
+                onChange: () => {
+                    this.enable();
+                },
             },
             {
                 key: "keepLast",
@@ -199,7 +209,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                 default: true,
                 scope: "client",
                 onChange: () => {
-                    this.render();
+                    this.render({ parts: ["main"] });
                 },
             },
             {
@@ -208,7 +218,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                 default: true,
                 scope: "client",
                 onChange: () => {
-                    this.render();
+                    this.render({ parts: ["main"] });
                 },
             },
             {
@@ -217,7 +227,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                 default: true,
                 scope: "client",
                 onChange: () => {
-                    this.render();
+                    this.render({ parts: ["main"] });
                 },
             },
             {
@@ -227,7 +237,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                 default: "one",
                 scope: "client",
                 onChange: () => {
-                    this.render();
+                    this.render({ parts: ["main"] });
                 },
             },
             {
@@ -241,7 +251,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                     step: 1,
                 },
                 onChange: () => {
-                    this.render();
+                    this.render({ parts: ["main"] });
                 },
             },
             {
@@ -251,7 +261,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                 scope: "client",
                 gmOnly: true,
                 onChange: () => {
-                    this.render();
+                    this.render({ parts: ["main"] });
                 },
             },
             {
@@ -444,8 +454,11 @@ class PF2eHudPersistent extends makeAdvancedHUD(
         this.#deleteActorHook.toggle(enabled);
         this.#updateUserHook.toggle(enabled);
 
+        this.#deleteCombatHook.toggle(enabled);
+        this.#deleteCombatantHook.toggle(enabled);
+        this.#createCombatantHook.toggle(enabled);
+
         this.#controlTokenHook.toggle(enabled && autoSet === "select");
-        this.#combatDeleteHook.toggle(enabled && autoSet === "combat");
         this.#combatTurnHook.toggle(enabled && autoSet === "combat");
 
         if (enabled) {
@@ -581,7 +594,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
         }
     }
 
-    protected _onFirstRender(context: PersistentContext, options: PersistentRenderOptions) {
+    _onFirstRender(context: PersistentContext, options: PersistentRenderOptions) {
         document.getElementById("ui-left")?.append(this.element);
     }
 
@@ -699,6 +712,10 @@ class PF2eHudPersistent extends makeAdvancedHUD(
         return super.isValidActor(actor) && actor.isOwner;
     }
 
+    acceptsActor(actor: Maybe<ActorPF2e>) {
+        return this.enabled && !hud.persistent.savedActor && this.isValidActor(actor);
+    }
+
     flash() {
         if (this.getSetting("noflash")) return;
 
@@ -775,10 +792,18 @@ class PF2eHudPersistent extends makeAdvancedHUD(
         else titleElement.append(btnElement);
     }
 
-    #onDeleteCombat() {
-        if (this.savedActor) return;
+    #onChangeCombatant(combatant: CombatantPF2e) {
+        if (this.#hasStances && this.isCurrentActor(combatant.actor)) {
+            this.render({ parts: ["main"] });
+        }
+    }
 
-        this.setActor(null, { skipSave: true, force: true });
+    #onDeleteCombat() {
+        if (!this.savedActor && this.getSetting("autoSet") === "combat") {
+            this.setActor(null, { skipSave: true, force: true });
+        } else if (this.#hasStances) {
+            this.render({ parts: ["main"] });
+        }
     }
 
     #onCombatTurnChange() {
@@ -981,7 +1006,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
             if (!effect) return;
 
             if (effect.isOfType("condition") && effect.slug === "persistent-damage") {
-                new PersistentDialog(actor, { editing: effect.id }).render(true);
+                new PersistentDamageDialog(actor, { editing: effect.id }).render(true);
             } else {
                 effect.sheet.render(true);
             }
@@ -1021,10 +1046,21 @@ class PF2eHudPersistent extends makeAdvancedHUD(
             editAvatar(actor);
         });
 
-        if (!game.ready) return;
+        if (game.ready) {
+            requestAnimationFrame(() => {
+                this.#setupAvatar(html);
+            });
+        } else {
+            Hooks.once("ready", () => {
+                this.#setupAvatar(html);
+            });
+        }
+    }
 
+    #setupAvatar(html: HTMLElement) {
+        const actor = this.actor;
         const avatarElement = htmlQuery(html, ".avatar");
-        if (!avatarElement) return;
+        if (!avatarElement || !actor) return;
 
         const avatarFlag = getFlag<AvatarData>(actor, "avatar");
         if (!avatarFlag) {
@@ -1080,6 +1116,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
             return owner && getFlag(worldActor, "persistent.shortcuts", owner) ? owner : undefined;
         })();
 
+        this.#hasStances = false;
         this.#shortcuts = {};
         this.#shortcutData = {};
         this.#isVirtual = !!shortcutsOwner || autoFill;
@@ -1307,6 +1344,8 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                     return actor.getStatistic(slug)?.roll({ event });
                 } else if (shortcut.actionId === "recall-knowledge" && !shortcut.statistic) {
                     return rollRecallKnowledge(actor);
+                } else if (shortcut.actionId === "earnIncome") {
+                    return game.pf2e.actions.earnIncome(actor);
                 }
 
                 rollStatistic(actor, event, shortcut);
@@ -1347,7 +1386,7 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                     return useAction(event, item);
                 }
 
-                return toggleStance(actor as CharacterPF2e, shortcut.effectUuid);
+                return toggleStance(actor as CharacterPF2e, shortcut.effectUuid, event.ctrlKey);
             }
 
             case "spell": {
@@ -1406,8 +1445,10 @@ class PF2eHudPersistent extends makeAdvancedHUD(
 
             case "open-attack-popup": {
                 if (actor.isOfType("character")) {
-                    const { left, top, height } = this.mainElement!.getBoundingClientRect();
-                    openAttackpopup(actor, el.dataset, { left, top: top - height - 100 });
+                    game.pf2e.rollActionMacro({
+                        ...el.dataset,
+                        actorUUID: actor.uuid,
+                    });
                 }
                 break;
             }
@@ -1960,11 +2001,12 @@ class PF2eHudPersistent extends makeAdvancedHUD(
 
                 const name = item?.name ?? shortcutData.name;
                 const frequency = item ? getActionFrequency(item) : undefined;
+                const isStance = !!item && actor.isOfType("character") && isValidStance(item);
                 const disabled = !item || frequency?.value === 0;
 
                 const isActive = (() => {
                     const effectUUID = shortcutData.effectUuid;
-                    if (!item || !effectUUID || !isValidStance(item)) return null;
+                    if (!item || !effectUUID || !isStance) return null;
                     return hasItemWithSourceId(actor, effectUUID, "effect");
                 })();
 
@@ -1973,10 +2015,12 @@ class PF2eHudPersistent extends makeAdvancedHUD(
                     return hasItemWithSourceId(actor, item.system.selfEffect.uuid, "effect");
                 })();
 
+                if (isStance) this.#hasStances = true;
+
                 return returnShortcut({
                     ...shortcutData,
                     isDisabled: disabled,
-                    isFadedOut: disabled,
+                    isFadedOut: disabled || (isStance && !canUseStances(actor)),
                     item,
                     isActive,
                     img: item ? getActionImg(item, true) : shortcutData.img,
@@ -2370,6 +2414,7 @@ type CreateShortcutCache = {
     dailiesModule?: Maybe<PF2eDailiesModule>;
     entryLabel?: Record<string, string>;
     canCastRank?: Partial<Record<OneToTen, boolean>>;
+    canUseStances?: boolean;
 };
 
 type FillShortcutCache = {
@@ -2623,7 +2668,7 @@ type PartName = "menu" | "main" | "portrait" | "effects";
 
 type PersistentHudActor = CharacterPF2e | NPCPF2e;
 
-type PersistentRenderOptions = BaseActorRenderOptions & {
+type PersistentRenderOptions = Omit<BaseActorRenderOptions, "parts"> & {
     parts: PartName[];
     cleaned: boolean;
     showUsers: boolean;

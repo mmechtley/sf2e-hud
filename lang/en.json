@@ -17,6 +17,10 @@
             }
         },
         "settings": {
+            "partyAsObserved": {
+                "name": "Party Alliance as Observed",
+                "hint": "Consider actors in the 'Party' alliance to be observed by players for the sake of extending the tooltip or showing health details in the combat tracker. Not to be confused with the 'Party' actor."
+            },
             "highestSpeed": {
                 "name": "Show Highest Speed",
                 "hint": "If no speed was manually selected, the highest one will always be shown by default even if the land speed isn't 0."
@@ -119,10 +123,6 @@
                         "small": "Small Version Only",
                         "full": "Extended Version"
                     }
-                },
-                "partyAsObserved": {
-                    "name": "Party as Observed",
-                    "hint": "Consider actors in the 'Party' alliance to be observed by players for the sake of extending the tooltip. Not to be confused with the 'Party' actor."
                 }
             },
             "token": {
@@ -190,7 +190,7 @@
                 },
                 "autoSet": {
                     "name": "Auto-Set Actor",
-                    "hint": "Whenever no persistent actor has been set, the currently selected token actor or the current combatant actor will automatically be set as persistent. NOTE: Will completely disable the 'Token HUD' feature if set to 'On Token Selection'.",
+                    "hint": "Whenever no persistent actor has been set, the currently selected token actor or the current combatant actor will automatically be set as persistent.",
                     "choices": {
                         "disabled": "Disabled",
                         "select": "On Token Selection",
