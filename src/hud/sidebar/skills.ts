@@ -925,7 +925,13 @@ async function getStatisticVariants(
 function getSkillVariantName(actionId: string, variant: string) {
     const actionKey = game.pf2e.system.sluggify(actionId, { camel: "bactrian" });
     const variantKey = game.pf2e.system.sluggify(variant, { camel: "bactrian" });
-    return game.i18n.localize(`PF2E.Actions.${actionKey}.${variantKey}.Title`);
+    const pf2eKey = `PF2E.Actions.${actionKey}.${variantKey}.Title`;
+    let localized = game.i18n.localize(pf2eKey);
+    if( localized === pf2eKey ) {
+        const sf2eKey = `SF2E.Actions.${actionKey}.${variantKey}.Title`;
+        localized = game.i18n.localize(sf2eKey);
+    }
+    return localized;
 }
 
 function getMapValue(map: 1 | 2, agile = false) {
