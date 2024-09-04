@@ -209,7 +209,6 @@ const SKILLS: RawSkill[] = [
                 cost: 2,
                 trained: true,
                 uuid: "Compendium.pf2e.actionspf2e.Item.cYdz2grcOcRt4jk6",
-                label: "SF2E.Actions.PlotCourse.Title"
             },
             {
                 actionId: "hack",
